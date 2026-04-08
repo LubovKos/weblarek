@@ -8,11 +8,22 @@ import { apiProducts } from './utils/data';
 import { Cart } from './components/Models/Cart';
 import { Buyer } from './components/Models/Buyer';
 
+import { API_URL } from './utils/constants';
+
 const catalog = new ProductCatalog();
 catalog.setProducts(apiProducts.items);
 
 console.log('Каталог товаров:', catalog.getProducts());
-console.log('Товар по id:', catalog.getProductById(apiProducts.items[0].id));
+const product = catalog.getProductById(apiProducts.items[0].id);
+console.log('Товар по id:', product);
+console.log(product?.description);
+
+if (product) {
+    catalog.setSelectedProduct(product);
+} else {
+    console.error('Товар не найден');
+}
+console.log('Выбранный товар:', catalog.getSelectedProduct());
 
 const cart = new Cart();
 
@@ -53,10 +64,10 @@ console.log('После очистки:', buyer.getData());
 
 
 
-const api = new Api(import.meta.env.VITE_API_ORIGIN);
+const api = new Api(API_URL);
 const larekApi = new LarekApi(api);
 const catalog2 = new ProductCatalog();
-console.log(import.meta.env.VITE_API_ORIGIN);
+console.log(API_URL);
 
 larekApi.getProducts()
   .then((products) => {
