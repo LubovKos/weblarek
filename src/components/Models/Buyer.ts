@@ -1,10 +1,13 @@
 import { IBuyer, BuyerValidationErrors} from '../../types';
+import { IEvents } from '../base/Events';
 
 export class Buyer {
   private payment: IBuyer['payment'] = null;
   private email: string = '';
   private phone: string = '';
   private address: string = '';
+
+  constructor(protected events: IEvents) {}
 
   setData(data: Partial<IBuyer>): void {
     if (data.payment !== undefined) {
@@ -19,11 +22,13 @@ export class Buyer {
     if (data.address !== undefined) {
       this.address = data.address;
     }
+    const errors = this.validate();
+    this.events.emit('formErrors:change', errors);
   }
 
   getData(): IBuyer {
     return {
-      payment: this.payment as IBuyer['payment'],
+      payment: this.payment,
       email: this.email,
       phone: this.phone,
       address: this.address,
