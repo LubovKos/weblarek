@@ -4,10 +4,10 @@ import { ensureElement } from '../../utils/utils';
 
 interface IFormState {
     valid: boolean;
-    errors: string[];
+    errors: string;
 }
 
-export class Form<T> extends Component<IFormState> {
+export class Form<T> extends Component<IFormState & T> {
     protected _submit: HTMLButtonElement;
     protected _errors: HTMLElement;
 
@@ -43,12 +43,5 @@ export class Form<T> extends Component<IFormState> {
 
     set errors(value: string) {
         this._errors.textContent = value;
-    }
-
-    render(state: Partial<T> & IFormState) {
-        const { valid, errors, ...inputs } = state;
-        super.render({ valid, errors });
-        Object.assign(this, inputs);
-        return this.container;
     }
 }

@@ -22,8 +22,7 @@ export class Buyer {
     if (data.address !== undefined) {
       this.address = data.address;
     }
-    const errors = this.validate();
-    this.events.emit('formErrors:change', errors);
+    this.events.emit('buyer:changed', data);
   }
 
   getData(): IBuyer {
@@ -60,6 +59,7 @@ export class Buyer {
     if (!this.phone) {
       errors.phone = 'Укажите телефон';
     }
+    this.events.emit('buyer:validation', errors);
 
     return errors;
   }

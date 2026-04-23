@@ -13,8 +13,7 @@ export class Order extends Form<IBuyer> {
 
         this._buttons.forEach(button => {
             button.addEventListener('click', () => {
-                this.payment = button.name;
-                this.onInputChange('payment', button.name);
+                this.events.emit('order.payment:change', { field: 'payment', value: button.name });
             });
         });
     }
