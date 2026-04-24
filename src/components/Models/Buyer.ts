@@ -22,7 +22,7 @@ export class Buyer {
     if (data.address !== undefined) {
       this.address = data.address;
     }
-    this.events.emit('buyer:changed', data);
+    this.events.emit('buyer:changed');
   }
 
   getData(): IBuyer {
@@ -39,6 +39,7 @@ export class Buyer {
     this.email = '';
     this.phone = '';
     this.address = '';
+    this.events.emit('buyer:changed');
   }
 
   validate(): BuyerValidationErrors {
@@ -59,8 +60,6 @@ export class Buyer {
     if (!this.phone) {
       errors.phone = 'Укажите телефон';
     }
-    this.events.emit('buyer:validation', errors);
-
     return errors;
   }
 }

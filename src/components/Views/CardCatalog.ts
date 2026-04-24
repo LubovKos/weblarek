@@ -12,9 +12,13 @@ export class CardCatalog extends Card {
     protected _category: HTMLElement;
 
     constructor(container: HTMLElement, actions?: ICardActions) {
-        super(container, actions);
+        super(container);
         this._image = ensureElement<HTMLImageElement>('.card__image', container);
         this._category = ensureElement<HTMLElement>('.card__category', container);
+
+        if (actions?.onClick) {
+            container.addEventListener('click', actions.onClick);
+        }
     }
 
     set category(value: string) {

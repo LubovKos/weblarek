@@ -22,7 +22,7 @@ export class ProductCatalog {
 
     setSelectedProduct(product: IProduct): void {
         this.selectedProduct = product;
-        this.events.emit('preview:changed', this.selectedProduct);
+        this.events.emit('preview:changed');
     }
 
     getSelectedProduct(): IProduct | null {

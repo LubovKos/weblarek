@@ -13,20 +13,15 @@ export class CardPreview extends Card {
     protected _category: HTMLElement;
 
     constructor(container: HTMLElement, actions?: ICardActions) {
-        super(container, actions);
+        super(container);
         this._button = ensureElement<HTMLButtonElement>('.card__button', container);
         this._description = ensureElement<HTMLElement>('.card__text', container);
         this._image = ensureElement<HTMLImageElement>('.card__image', container);
         this._category = ensureElement<HTMLElement>('.card__category', container);
 
-        if (actions?.onClick) {
+        if (actions?.onClick) { 
             this._button.addEventListener('click', actions.onClick);
-            container.removeEventListener('click', actions.onClick);
         }
-    }
-    
-    set price(value: number | null) { 
-        this._price.textContent = value ? `${value} синапсов` : 'Бесценно'; 
     }
 
     set description(value: string) {

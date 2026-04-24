@@ -116,21 +116,25 @@ events.on('basket:open', () => {
     });
 });
 
-// Валидация форм 
-events.on('buyer:validation', (errors: Partial<IBuyer>) => {
-    const data = buyer.getData();
+// Изменение данных в формах
+events.on('buyer:changed', () => {
+    const data = buyer.getData(); 
+    const errors = buyer.validate();
     order.render({
         payment: data.payment,
         address: data.address,
         valid: !errors.payment && !errors.address,
-        errors: Object.values({ payment: errors.payment, address: errors.address }).filter(Boolean).join('; ')
+        errors: Object.values({ payment: errors.payment, address: errors.address })
+                      .filter(Boolean)
+                      .join('; ')
     });
-
     contacts.render({
         email: data.email,
         phone: data.phone,
         valid: !errors.email && !errors.phone,
-        errors: Object.values({ email: errors.email, phone: errors.phone }).filter(Boolean).join('; ')
+        errors: Object.values({ email: errors.email, phone: errors.phone })
+                      .filter(Boolean)
+                      .join('; ')
     });
 });
 
@@ -149,6 +153,14 @@ events.on('card:toBasket', () => {
     modal.close();
 });
 
+events.on(/^order\..*:change/, (data: { field: keyof IBuyer; value: string }) => {
+    buyer.setData({ [data.field]: data.value });
+});
+
+events.on(/^contacts\..*:change/, (data: { field: keyof IBuyer; value: string }) => {
+    buyer.setData({ [data.field]: data.value });
+});
+
 // Открытие первой формы заказа
 events.on('order:open', () => {
     const data = buyer.getData();
@@ -159,19 +171,11 @@ events.on('order:open', () => {
             payment: data.payment,
             address: data.address,
             valid: !errors.payment && !errors.address,
-            errors: ''
+            errors: Object.values({ payment: errors.payment, address: errors.address })
+                          .filter(Boolean)
+                          .join('; ')
         }),
     });
-});
-
-events.on(/^order\..*:change/, (data: { field: keyof IBuyer; value: string }) => {
-    buyer.setData({ [data.field]: data.value });
-    buyer.validate();
-});
-
-events.on(/^contacts\..*:change/, (data: { field: keyof IBuyer; value: string }) => {
-    buyer.setData({ [data.field]: data.value });
-    buyer.validate();
 });
 
 events.on('order:submit', () => {
@@ -183,7 +187,9 @@ events.on('order:submit', () => {
             email: data.email, 
             phone: data.phone, 
             valid: !errors.email && !errors.phone,
-            errors: ''
+            errors: Object.values({ email: errors.email, phone: errors.phone })
+                          .filter(Boolean)
+                          .join('; ')
         }),
     });
 });
@@ -206,14 +212,6 @@ events.on('contacts:submit', () => {
             buyer.clear(); 
         })
         .catch(err => console.error(err));
-});
-
-events.on('modal:open', () => {
-    gallery.locked = true;
-});
-
-events.on('modal:close', () => {
-    gallery.locked = false;
 });
 
 api.getProducts()
